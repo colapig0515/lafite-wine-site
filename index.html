@@ -102,6 +102,135 @@ body{background:var(--paper);color:var(--ink)}
 .filter.active,.filter:hover{background:var(--wine);border-color:var(--wine)}
 .arrow-link{border-color:#c9a36a}
 </style>
+
+<style>
+/* 拉菲家族酒庄切换展厅 */
+.estate-showcase{padding:132px 0 138px;background:var(--soft);overflow:hidden}
+.estate-showcase-head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:52px}
+.estate-showcase-head h2{font-size:clamp(58px,8vw,118px);line-height:.92;letter-spacing:-.075em;margin:0;color:var(--ink)}
+.estate-showcase-head p{max-width:360px;margin:0;color:var(--muted);font:15px/1.8 'Noto Serif SC',serif}
+.estate-stage{position:relative;display:grid;grid-template-columns:minmax(260px,.86fr) minmax(0,1.14fr);min-height:485px;background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.estate-visual{position:relative;min-height:485px;overflow:hidden;background:var(--wine)}
+.estate-visual:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(29,8,14,.34),transparent 60%);pointer-events:none}
+.estate-visual img{width:100%;height:100%;object-fit:cover;filter:saturate(.62) contrast(1.06);transition:transform 1s var(--ease),filter 1s var(--ease)}
+.estate-stage:hover .estate-visual img{transform:scale(1.045);filter:saturate(.94) contrast(1.04)}
+.estate-index{position:absolute;z-index:2;left:26px;top:24px;color:var(--rose);font-size:13px;font-weight:900;letter-spacing:.18em}
+.estate-caption{position:absolute;z-index:2;left:28px;right:28px;bottom:25px;color:var(--paper)}
+.estate-caption b{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;color:var(--rose)}
+.estate-caption span{font:14px/1.65 'Noto Serif SC',serif;color:rgba(253,248,243,.86)}
+.estate-copy{padding:50px 58px 42px;display:flex;flex-direction:column;min-width:0}
+.estate-kicker{font-size:10px;font-weight:900;letter-spacing:.22em;color:#a77d3e;text-transform:uppercase;margin-bottom:17px}
+.estate-copy h3{font-size:clamp(35px,4vw,68px);line-height:1;letter-spacing:-.065em;margin:0 0 8px;color:var(--ink)}
+.estate-en{font-size:13px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:25px}
+.estate-copy p{font:16px/1.9 'Noto Serif SC',serif;color:var(--muted);max-width:620px;margin:0 0 26px}
+.estate-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;border-top:1px solid var(--line);padding-top:18px;margin-top:auto}
+.estate-facts b{display:block;color:var(--wine);font-size:12px;letter-spacing:.12em;margin-bottom:7px}
+.estate-facts span{display:block;font:12px/1.5 'Noto Serif SC',serif;color:var(--muted)}
+.estate-controls{display:flex;align-items:center;justify-content:space-between;margin-top:24px}
+.estate-arrows{display:flex;gap:8px}.estate-arrow{width:44px;height:44px;border:1px solid var(--wine);background:transparent;color:var(--wine);font-size:19px;cursor:pointer;transition:all .45s var(--ease)}
+.estate-arrow:hover{background:var(--wine);color:var(--paper)}
+.estate-progress{display:flex;align-items:center;gap:11px;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:.15em}.estate-progress i{display:block;width:100px;height:2px;background:var(--line);position:relative}.estate-progress i:after{content:'';position:absolute;left:0;top:0;height:100%;width:var(--progress,16.6%);background:var(--wine);transition:width .6s var(--ease)}
+.estate-source{margin-top:22px;font-size:10px;letter-spacing:.08em;color:rgba(38,38,38,.48)}
+@media(max-width:800px){.estate-showcase{padding:94px 0}.estate-showcase-head{display:block;margin-bottom:34px}.estate-showcase-head p{margin-top:22px}.estate-stage{grid-template-columns:1fr;min-height:0}.estate-visual{min-height:330px}.estate-copy{padding:34px 24px 28px}.estate-copy p{font-size:14px;line-height:1.85}.estate-facts{margin-top:8px}.estate-progress i{width:64px}}
+@media(max-width:480px){.estate-showcase-head h2{font-size:19vw}.estate-visual{min-height:270px}.estate-copy h3{font-size:42px}.estate-facts{grid-template-columns:1fr 1fr}.estate-facts div:last-child{grid-column:span 2}.estate-source{line-height:1.5}}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const old = document.querySelector('.terroir');
+  if (!old) return;
+  const estates = [
+    {no:'01',name:'拉菲罗斯柴尔德酒庄',en:'Château Lafite Rothschild',place:'波亚克 · 梅多克 · 法国',img:'assets/estates/lafite.jpg',desc:'DBR 拉菲家族的核心酒庄。深厚砾石土壤、成熟的赤霞珠和长期陈年共同塑造了它克制、精确而有延展性的风格。',facts:[['定位','1855 一级特等酒庄'],['核心品种','赤霞珠为主'],['代表酒款','大拉菲 / 小拉菲']]},
+    {no:'02',name:'杜哈米隆古堡',en:'Château Duhart-Milon',place:'波亚克 · 梅多克 · 法国',img:'assets/estates/duhart.jpg',desc:'与拉菲古堡相邻的波亚克酒庄。砾石土壤与充足日照让赤霞珠保有骨架，梅洛则为酒体带来圆润与丰厚。',facts:[['葡萄园','约 76 公顷'],['风格','结构清晰、深度持久'],['代表酒款','杜哈米隆古堡红']]},
+    {no:'03',name:'莱斯古堡',en:'Château Rieussec',place:'苏岱 · 波尔多 · 法国',img:'assets/estates/rieussec.jpg',desc:'DBR 拉菲家族在苏岱的甜白葡萄酒庄园。贵腐带来的浓郁香气与天然酸度，形成甜美而不失清新的平衡。',facts:[['产区','苏岱 AOC'],['风格','贵腐甜白'],['代表酒款','Château Rieussec']]},
+    {no:'04',name:'乐王吉古堡',en:'Château L’Évangile',place:'波美侯 · 波尔多 · 法国',img:'assets/estates/evangile.jpg',desc:'位于波美侯高地的家族酒庄，以梅洛为基础，辅以品丽珠，强调丝滑质地、黑色果实与细腻矿物感。',facts:[['产区','波美侯 AOC'],['核心品种','梅洛、品丽珠'],['风格','丰盈、丝滑、优雅']]},
+    {no:'05',name:'瓏岱酒庄',en:'LONG DAI',place:'蓬莱 · 山东 · 中国',img:'assets/estates/long-dai.jpg',desc:'拉菲罗斯柴尔德男爵酒业在中国的旗舰酒庄。葡萄园位于保护区中心，梯田式地块让团队以更细致的方式理解中国风土。',facts:[['葡萄园','34 公顷 / 420 个梯田'],['核心品种','赤霞珠、马瑟兰'],['代表酒款','瓏岱 LONG DAI']]},
+    {no:'06',name:'拉菲罗斯柴尔德男爵酒业',en:'Los Vascos · Rimapere · Edmond de Rothschild',place:'智利 / 新西兰 / 法国',img:'assets/estates/los-vascos.png',desc:'从智利科尔查瓜谷、新西兰马尔堡到法国各产区，DBR 将家族对土地的理解延伸到不同气候与文化之中。',facts:[['系列','DBR / EDR'],['代表酒款','巴斯克、五箭、威乐宝'],['共通理念','尊重土地与年份']]}
+  ];
+  old.outerHTML = `<section class="estate-showcase" id="terroir"><div class="wrap"><div class="estate-showcase-head reveal"><div><div class="eyebrow" style="color:#a77d3e">02 / Family estates</div><h2>拉菲旗下<br>酒庄。</h2></div><p>从波尔多左岸到山东、智利与新西兰，家族酒庄各自表达土地，也共同遵循对年份、手艺与时间的尊重。</p></div><div class="estate-stage reveal"><div class="estate-visual"><img id="estateImage" src="${estates[0].img}" alt="${estates[0].name}"><span class="estate-index" id="estateIndex">${estates[0].no} / 06</span><div class="estate-caption"><b id="estatePlace">${estates[0].place}</b><span>每一片土地，都有自己的节奏。</span></div></div><div class="estate-copy"><div class="estate-kicker">DBR FAMILY ESTATE</div><h3 id="estateName">${estates[0].name}</h3><div class="estate-en" id="estateEn">${estates[0].en}</div><p id="estateDesc">${estates[0].desc}</p><div class="estate-facts" id="estateFacts">${estates[0].facts.map(f=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('')}</div><div class="estate-controls"><div class="estate-arrows"><button class="estate-arrow" id="estatePrev" aria-label="上一座酒庄">←</button><button class="estate-arrow" id="estateNext" aria-label="下一座酒庄">→</button></div><div class="estate-progress"><span id="estateCount">01 / 06</span><i></i></div></div><div class="estate-source">资料依据：用户提供产品资料与 DBR 拉菲公开品牌信息；个别年份与面积以官方最新发布为准。</div></div></div></div></section>`;
+  document.querySelectorAll('.estate-showcase .reveal').forEach(el => el.classList.add('active'));
+  const $ = id => document.getElementById(id); let index = 0;
+  function render(i,direction='next'){ index=(i+estates.length)%estates.length; const e=estates[index]; const stage=document.querySelector('.estate-stage'); stage.classList.remove('slide-next','slide-prev'); void stage.offsetWidth; stage.classList.add(direction==='prev'?'slide-prev':'slide-next'); $('estateImage').src=e.img; $('estateImage').alt=e.name; $('estateIndex').textContent=`${e.no} / 06`; $('estatePlace').textContent=e.place; $('estateName').textContent=e.name; $('estateEn').textContent=e.en; $('estateDesc').textContent=e.desc; $('estateFacts').innerHTML=e.facts.map(f=>`<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join(''); $('estateCount').textContent=`${e.no} / 06`; document.querySelector('.estate-progress i').style.setProperty('--progress',`${((index+1)/estates.length)*100}%`); }
+  $('estatePrev').addEventListener('click',()=>render(index-1,'prev')); $('estateNext').addEventListener('click',()=>render(index+1,'next'));
+});
+</script>
+<style>
+/* 酒庄展厅紧凑版与左右切换动效 */
+.estate-showcase{padding:92px 0 98px}
+.estate-showcase-head{margin-bottom:34px}
+.estate-showcase-head h2{font-size:clamp(50px,6.6vw,92px)}
+.estate-stage{min-height:360px;grid-template-columns:minmax(220px,.78fr) minmax(0,1.22fr)}
+.estate-visual{min-height:360px}
+.estate-copy{padding:32px 42px 28px}
+.estate-copy h3{font-size:clamp(30px,3.3vw,52px);margin-bottom:5px}
+.estate-copy p{font-size:14px;line-height:1.75;margin-bottom:18px}
+.estate-facts{padding-top:13px;gap:12px}
+.estate-facts span{font-size:11px}
+.estate-controls{margin-top:17px}
+.estate-source{margin-top:14px}
+.estate-stage.slide-next .estate-visual,.estate-stage.slide-next .estate-copy{animation:estateInNext .55s var(--ease) both}
+.estate-stage.slide-prev .estate-visual,.estate-stage.slide-prev .estate-copy{animation:estateInPrev .55s var(--ease) both}
+@keyframes estateInNext{from{opacity:.25;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes estateInPrev{from{opacity:.25;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+@media(max-width:800px){.estate-showcase{padding:72px 0 78px}.estate-showcase-head{margin-bottom:26px}.estate-stage{grid-template-columns:1fr;min-height:0}.estate-visual{min-height:245px}.estate-copy{padding:26px 22px 24px}.estate-copy h3{font-size:38px}.estate-copy p{font-size:13px;line-height:1.8}.estate-controls{margin-top:15px}}
+@media(max-width:480px){.estate-showcase-head h2{font-size:17vw}.estate-visual{min-height:210px}.estate-copy h3{font-size:35px}}
+</style>
+<style>
+.admin-launch{display:none!important}
+</style>
+<script>
+(() => {
+  const openAdmin = () => { const overlay = document.getElementById('adminOverlay'); if (overlay) { overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false'); } };
+  if (location.hash === '#admin' || new URLSearchParams(location.search).get('admin') === '1') openAdmin();
+})();
+</script>
+<button class="admin-launch" id="adminLaunch">后台</button>
+<div class="admin-overlay" id="adminOverlay" aria-hidden="true">
+  <div class="admin-panel" id="adminLogin">
+    <button class="admin-x" id="adminClose">×</button>
+    <p class="admin-kicker">DBR LAFITE / ADMIN</p>
+    <h2>销售管理后台</h2>
+    <p class="admin-hint">登录后管理订单和销售统计。</p>
+    <input id="adminUser" placeholder="管理员账号" autocomplete="username">
+    <input id="adminPass" type="password" placeholder="管理员密码" autocomplete="current-password">
+    <button class="admin-primary" id="adminLoginBtn">登录</button>
+    <small id="adminError">账号或密码错误</small>
+  </div>
+  <div class="admin-panel admin-dashboard" id="adminDashboard" hidden>
+    <button class="admin-x" id="adminExit">×</button>
+    <div class="admin-head"><div><p class="admin-kicker">DBR LAFITE / ADMIN</p><h2>销售概览</h2></div><button class="admin-primary" id="adminCsv">导出 CSV</button></div>
+    <div class="admin-stats"><div><span>销售额</span><b id="adminRevenue">¥0</b></div><div><span>订单数</span><b id="adminCount">0</b></div><div><span>已完成</span><b id="adminDone">0</b></div></div>
+    <form id="adminOrder"><h3>录入订单</h3><div class="admin-fields"><input name="customer" required placeholder="客户名称"><select name="product"></select><input name="qty" type="number" min="1" value="1"><input name="price" type="number" min="0" required><button class="admin-primary">保存订单</button></div></form>
+    <h3>订单列表</h3><div id="adminOrders"></div>
+  </div>
+</div>
+<style>
+.admin-launch{position:fixed;right:24px;bottom:24px;z-index:40;border:0;border-radius:50%;width:52px;height:52px;background:#541d2b;color:#fffdf9;font:900 11px 'League Spartan';cursor:pointer;box-shadow:0 10px 24px #541d2b44}.admin-overlay{position:fixed;inset:0;z-index:80;background:#21181699;backdrop-filter:blur(8px);display:none;padding:24px}.admin-overlay.open{display:flex;align-items:center;justify-content:center}.admin-panel{position:relative;width:min(1050px,100%);max-height:90vh;overflow:auto;background:#fffdf9;padding:34px;color:#211816;box-shadow:0 30px 80px #21181644}.admin-panel h2{font-size:34px;margin:0 0 8px}.admin-panel h3{margin:28px 0 14px}.admin-x{position:absolute;right:18px;top:12px;border:0;background:none;font-size:28px;color:#541d2b;cursor:pointer}.admin-kicker{color:#8c672f;font:900 10px 'League Spartan';letter-spacing:.22em;margin:0 0 12px}.admin-hint,.admin-panel small{color:#4d4541;font-size:12px}.admin-panel input,.admin-panel select{width:100%;padding:11px;margin:5px 0;border:1px solid #541d2b55;background:#f8f5ee;font:14px 'Noto Serif SC'}.admin-login input{display:block}.admin-primary{border:0;background:#541d2b;color:#fffdf9;padding:12px 18px;font:900 10px 'League Spartan';letter-spacing:.14em;cursor:pointer}.admin-panel>#adminLoginBtn{width:100%;margin-top:10px}.admin-head{display:flex;justify-content:space-between;align-items:center}.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}.admin-stats>div{background:#eee9df;padding:18px}.admin-stats span{display:block;color:#704324;font-size:10px;letter-spacing:.12em;margin-bottom:7px}.admin-stats b{font-size:25px;color:#541d2b}.admin-fields{display:grid;grid-template-columns:1.2fr 1.6fr .6fr .8fr auto;gap:8px}.admin-table{width:100%;border-collapse:collapse;font-size:12px}.admin-table th,.admin-table td{text-align:left;padding:10px 8px;border-bottom:1px solid #541d2b22}.admin-table th{color:#704324;font-size:10px}@media(max-width:700px){.admin-fields{grid-template-columns:1fr 1fr}.admin-stats{grid-template-columns:1fr 1fr}.admin-stats>div:last-child{grid-column:span 2}}
+</style>
+<script>
+(() => {
+  const products = [['拉菲古堡（大拉菲）',7800],['拉菲珍宝（小拉菲）',4500],['杜哈米隆古堡',1200],['瓏岱 LONG DAI',2800],['琥岳 HU YUE',1600],['凯撒天堂古堡',299],['巴斯克十世 Le Dix',880],['五箭长相思白',339],['五箭黑皮诺红',898],['罗斯柴尔德威乐宝',799],['罗斯柴尔德小山谷',398]];
+  let orders = JSON.parse(localStorage.getItem('lafiteOrders') || '[]');
+  const $ = id => document.getElementById(id);
+  const money = n => '¥' + Number(n || 0).toLocaleString('zh-CN');
+  function render() {
+    $('adminRevenue').textContent = money(orders.filter(o => o.status !== '已取消').reduce((n,o) => n + o.total, 0));
+    $('adminCount').textContent = orders.length;
+    $('adminDone').textContent = orders.filter(o => o.status === '已完成').length;
+    $('adminOrder').product.innerHTML = products.map((p,i) => `<option value="${i}">${p[0]}</option>`).join('');
+    $('adminOrder').price.value = products[$('adminOrder').product.value || 0][1];
+    $('adminOrder').product.onchange = () => $('adminOrder').price.value = products[$('adminOrder').product.value][1];
+    const rows = orders.slice().reverse().map((o,i) => `<tr><td>${o.id}</td><td>${o.customer}</td><td>${o.product}</td><td>${o.qty}</td><td>${money(o.total)}</td><td>${o.status}</td><td><button class="admin-primary" data-done="${orders.length - 1 - i}">完成</button></td></tr>`).join('');
+    $('adminOrders').innerHTML = rows ? `<table class="admin-table"><thead><tr><th>订单号</th><th>客户</th><th>产品</th><th>数量</th><th>金额</th><th>状态</th><th></th></tr></thead><tbody>${rows}</tbody></table>` : '<p class="admin-hint">还没有订单。</p>';
+  }
+  $('adminLaunch').onclick = () => { $('adminOverlay').classList.add('open'); $('adminLogin').hidden = false; $('adminDashboard').hidden = true; };
+  $('adminClose').onclick = () => $('adminOverlay').classList.remove('open');
+  $('adminExit').onclick = () => $('adminOverlay').classList.remove('open');
+  $('adminLoginBtn').onclick = () => { if ($('adminUser').value === 'admin' && $('adminPass').value === 'lafite2025') { $('adminLogin').hidden = true; $('adminDashboard').hidden = false; render(); } else $('adminError').style.display = 'block'; };
+  $('adminOrder').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target), i = Number(f.get('product')), qty = Number(f.get('qty')), price = Number(f.get('price')); orders.push({id:'DBR-' + Date.now().toString().slice(-6), customer:f.get('customer'), product:products[i][0], qty, total:qty * price, status:'待确认'}); localStorage.setItem('lafiteOrders', JSON.stringify(orders)); e.target.reset(); render(); };
+  document.addEventListener('click', e => { if (e.target.dataset.done) { orders[e.target.dataset.done].status = '已完成'; localStorage.setItem('lafiteOrders', JSON.stringify(orders)); render(); } });
+  $('adminCsv').onclick = () => { const csv = ['订单号,客户,产品,数量,金额,状态', ...orders.map(o => [o.id,o.customer,o.product,o.qty,o.total,o.status].map(v => `"${String(v).replaceAll('"','""')}"`).join(','))].join('\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv'})); a.download = 'lafite-orders.csv'; a.click(); };
+})();
+</script>
 <style>
 /* 产品卡片：左文右图 */
 @media (min-width: 541px){
@@ -122,4 +251,25 @@ body{background:var(--paper);color:var(--ink)}
 <style>
 /* final editorial layout pass */
 body{font-size:16px;line-height:1.6}h1,h2,h3,h4,p{overflow-wrap:anywhere;word-break:normal}h1,h2,h3{font-family:'League Spartan','Noto Serif SC',sans-serif}.story h2,.products h2,.terroir h2,.footer-brand h2{line-height:1.08;letter-spacing:-.065em}.story h2{font-size:clamp(58px,7.4vw,108px)}.history-slide h3{line-height:1.08;letter-spacing:-.045em}.history-slide p{line-height:1.9}.history-slider{min-height:430px}.history-slide{min-height:300px}.history-controls{margin-top:36px}.product-grid{align-items:stretch}.product-card{min-height:430px;overflow:hidden}.product-card h3{line-height:1.18;letter-spacing:-.035em}.product-card p{line-height:1.72}.card-details{min-height:86px}.card-detail span{line-height:1.5}.product-foot{min-height:54px}.detail-btn{white-space:normal;line-height:1.35}.section-head h2,.portfolio-top h2{line-height:.95}@media(max-width:900px){.story h2,.products h2,.terroir h2,.footer-brand h2{line-height:1.06}.history-slider{min-height:0}.history-slide{min-height:330px}.product-card{min-height:0}.card-details{min-height:0}}@media(max-width:540px){.story h2,.products h2,.terroir h2,.footer-brand h2{font-size:20vw;line-height:1.1;letter-spacing:-.045em}.history-slide{min-height:0}.history-slide h3{font-size:34px;line-height:1.15}.history-slide p{font-size:15px;line-height:1.85}.history-controls{margin-top:26px}.product-card h3{font-size:28px;line-height:1.2}.product-card p{font-size:13px;line-height:1.8}.card-details{min-height:0}.product-foot{min-height:0}}
+</style>
+<style>
+/* readability and information hierarchy */
+:root{--muted:#4d4541;--line:rgba(74,23,35,.24)}
+.product-card{background:#fffdf9;border-color:rgba(74,23,35,.24);box-shadow:0 6px 20px rgba(38,24,20,.06)}
+.product-card:hover{background:#fff;box-shadow:0 16px 34px rgba(38,24,20,.13)}
+.product-type{color:#704324;font-size:10px;letter-spacing:.15em}
+.product-card h3{color:#211816;font-weight:800;font-size:26px;line-height:1.2}
+.product-card p{color:#38312d;font-size:13px;line-height:1.8}
+.card-detail{border-top-color:rgba(74,23,35,.27)}
+.card-detail b{color:#704324;font-size:9px}
+.card-detail span{color:#3f3732;font-size:12px;line-height:1.55}
+.product-foot{border-top-color:rgba(74,23,35,.3)}
+.product-foot small{color:#49413c;font-size:10px;line-height:1.55}
+.price b{color:#541d2b;font-size:23px;font-weight:800}
+.price span{color:#50443d;font-size:9px}
+.product-card .detail-btn{border-color:#541d2b;color:#541d2b;font-weight:900}
+.product-card .detail-btn:hover{background:#541d2b;color:#fffdf9}
+.product-photo{background:#f5f1e8}
+@media(min-width:541px){.product-card{grid-template-columns:minmax(0,1fr) 172px;column-gap:20px;padding:24px}.product-card .bottle{min-height:350px}.product-card h3{font-size:25px}.card-details{gap:9px;margin-bottom:16px}.card-detail span{font-size:11px}}
+@media(max-width:540px){.product-card h3{font-size:29px}.product-card p{font-size:14px}.card-detail span{font-size:12px}}
 </style>
